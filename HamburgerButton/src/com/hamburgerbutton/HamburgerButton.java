@@ -3,8 +3,6 @@ package com.hamburgerbutton;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hamburgerbutton.HamburgerButton.Layer;
-import com.hamburgerbutton.HamburgerButton.Layer.Item;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
 
