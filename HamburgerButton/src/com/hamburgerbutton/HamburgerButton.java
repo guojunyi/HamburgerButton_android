@@ -74,7 +74,7 @@ public class HamburgerButton extends View {
 			float a2 = SIZE - MARGIN;
 			float b2 = SIZE / 2;
 			float radius = (float) (Math.sqrt(Math.abs((a1 - a2) * (a1 - a2)
-					+ (b1 - b2) * (b1 - b2))) / 2)+STORKE_WIDTH/2;
+					+ (b1 - b2) * (b1 - b2))) / 2);
 
 			float offsetX = (a1 + a2) / 2 - 5;
 
@@ -90,7 +90,7 @@ public class HamburgerButton extends View {
 			mPathFactory.addPoint(x, y);
 		}
 
-		for (float i = 0.6f; i < 2.6f; i += 0.04) {
+		for (float i = 0.6f; i < 2.7f; i += 0.04) {
 			float x = (float) (Math.cos(Math.PI * i) * SIZE / 2 + SIZE / 2);
 			float y = (float) (SIZE / 2 - Math.sin(Math.PI * i) * SIZE / 2);
 			mPathFactory.addPoint(x, y);
