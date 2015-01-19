@@ -1,0 +1,13 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#5bfc98"
+    android:orientation="vertical" >
+
+   	<com.hamburgerbutton.HamburgerButton
+   	    android:id="@+id/button"
+   	    android:layout_width="44dp"
+   	    android:layout_height="60dp"
+   	    android:layout_centerInParent="true"
+   	    />
+</RelativeLayout>
