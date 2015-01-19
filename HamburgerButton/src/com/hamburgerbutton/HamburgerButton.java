@@ -32,12 +32,12 @@ public class HamburgerButton extends View {
 	private float MARGIN;
 	private int SIZE;
 
-	static final int STORKE_WIDTH = 6;
-	static final int STORKE_COLOR = 0xffffffff;
+	private static final int STORKE_WIDTH = 6;
+	private static final int STORKE_COLOR = 0xffffffff;
 
-	boolean isShowMenu = false;
+	private boolean isToogleOn = false;
 
-	int topY, bottomY;
+	private int topY, bottomY;
 
 	public HamburgerButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -107,42 +107,56 @@ public class HamburgerButton extends View {
 		SIZE -= STORKE_WIDTH;
 		topY = SIZE / 4;
 		bottomY = SIZE / 4 * 3;
-		MARGIN = SIZE / 4;
+		MARGIN = SIZE/8*2.3f;
 		initPath();
 	}
 
 	@Override
 	public void onDraw(Canvas canvas) {
-
-		Path path = mPathFactory.getPath(progressStart, progressEnd);
 		Bitmap tempBitmap = Bitmap.createBitmap(SIZE + STORKE_WIDTH, SIZE
 				+ STORKE_WIDTH, Config.ARGB_8888);
 		Canvas tempCanvas = new Canvas();
 		tempCanvas.setBitmap(tempBitmap);
-
+		
+		
 		Matrix matrix = new Matrix();
 		matrix.setTranslate(STORKE_WIDTH / 2, STORKE_WIDTH / 2);
-		path.transform(matrix);
+		
+		
+		drawTopLine(tempCanvas,matrix);
+		drawCenterLine(tempCanvas,matrix);
+		drawBottomLine(tempCanvas,matrix);
 
-		tempCanvas.drawPath(path, mPaint);
-		path.reset();
-		path.moveTo(MARGIN, topY);
-		path.lineTo(SIZE - MARGIN, SIZE / 4);
-		path.transform(matrix);
-		tempCanvas.drawPath(path, mPaint);
-
-		path.reset();
-		path.moveTo(MARGIN, bottomY);
-		path.lineTo(SIZE - MARGIN, SIZE / 4 * 3);
-		path.transform(matrix);
-		tempCanvas.drawPath(path, mPaint);
-
+		
 		canvas.drawBitmap(tempBitmap, (getWidth() - tempBitmap.getWidth()) / 2,
 				(getHeight() - tempBitmap.getHeight()) / 2, mPaint);
 		tempBitmap.recycle();
 
 	}
 
+	private void drawTopLine(Canvas canvas,Matrix matrix){
+		Path path = new Path();
+		path.moveTo(MARGIN, topY);
+		path.lineTo(SIZE - MARGIN, SIZE / 4);
+		path.transform(matrix);
+		canvas.drawPath(path, mPaint);
+	}
+	
+	private void drawCenterLine(Canvas canvas,Matrix matrix){
+		Path path = mPathFactory.getPath(progressStart, progressEnd);
+		path.transform(matrix);
+		canvas.drawPath(path, mPaint);
+	}
+	
+	private void drawBottomLine(Canvas canvas,Matrix matrix){
+		Path path = new Path();
+		path.moveTo(MARGIN, bottomY);
+		path.lineTo(SIZE - MARGIN, SIZE / 4 * 3);
+		path.transform(matrix);
+		canvas.drawPath(path, mPaint);
+	}
+	
+	
 	static class PathFactory {
 		class Item {
 			public float x;
@@ -163,7 +177,6 @@ public class HamburgerButton extends View {
 			int endIndex = (int) (points.size() * endProgress);
 
 			Item startPoint = points.get(startIndex);
-
 			path.moveTo(startPoint.x, startPoint.y);
 
 			while (startIndex < endIndex) {
@@ -171,7 +184,6 @@ public class HamburgerButton extends View {
 				path.quadTo(item.x, item.y, item.x, item.y);
 				startIndex++;
 			}
-
 			return path;
 		}
 
@@ -186,11 +198,14 @@ public class HamburgerButton extends View {
 
 	}
 
-	public void toggle() {
-
-		if (!isShowMenu) {
-			isShowMenu = true;
-
+	public boolean isToogleOn(){
+		return this.isToogleOn;
+	}
+	
+	public void toogleOn(){
+		if(!isToogleOn){
+			isToogleOn = true;
+			
 			ValueAnimator animator1 = ValueAnimator.ofFloat(0.0f, 0.51f);
 			animator1.setDuration(100);
 			animator1.addUpdateListener(new AnimatorUpdateListener() {
@@ -198,18 +213,12 @@ public class HamburgerButton extends View {
 				@Override
 				public void onAnimationUpdate(ValueAnimator animation) {
 					// TODO Auto-generated method stub
-
 					float frameValue = (Float) animation.getAnimatedValue();
 					progressStart = frameValue;
-					if (progressStart > 0.51) {
-						progressStart = 0.51f;
-					}
 					invalidate();
 				}
-
 			});
-			animator1.start();
-
+			
 			ValueAnimator animator2 = ValueAnimator.ofFloat(0.51f, 1.0f);
 			animator2.setDuration(200);
 			animator2.addUpdateListener(new AnimatorUpdateListener() {
@@ -220,15 +229,10 @@ public class HamburgerButton extends View {
 
 					float frameValue = (Float) animation.getAnimatedValue();
 					progressEnd = frameValue;
-					if (progressEnd > 1.0) {
-						progressEnd = 1.0f;
-					}
 					invalidate();
 				}
-
 			});
-			animator2.start();
-
+			
 			ValueAnimator animator3 = ValueAnimator.ofFloat(SIZE / 4,
 					SIZE / 4 * 3 + 10, SIZE / 4 * 3);
 			animator3.setDuration(200);
@@ -242,12 +246,10 @@ public class HamburgerButton extends View {
 					topY = (int) frameValue;
 					invalidate();
 				}
-
 			});
-			animator3.start();
-
+			
 			ValueAnimator animator4 = ValueAnimator.ofFloat(SIZE / 4 * 3,
-					SIZE / 4 + 10, SIZE / 4);
+					SIZE / 4 - 10, SIZE / 4);
 			animator4.setDuration(200);
 			animator4.addUpdateListener(new AnimatorUpdateListener() {
 
@@ -258,12 +260,18 @@ public class HamburgerButton extends View {
 					bottomY = (int) frameValue;
 					invalidate();
 				}
-
 			});
+			animator1.start();
+			animator2.start();
+			animator3.start();
 			animator4.start();
-		} else {
-			isShowMenu = false;
-
+		}
+	}
+	
+	public void toogleOff(){
+		if(isToogleOn){
+			isToogleOn = false;
+			
 			ValueAnimator animator1 = ValueAnimator.ofFloat(0.51f, 0.0f);
 			animator1.setDuration(100);
 			animator1.addUpdateListener(new AnimatorUpdateListener() {
@@ -276,11 +284,9 @@ public class HamburgerButton extends View {
 					progressStart = frameValue;
 					invalidate();
 				}
-
 			});
-			animator1.start();
 
-			ValueAnimator animator2 = ValueAnimator.ofFloat(1.0f, 0.20f, 0.26f);
+			ValueAnimator animator2 = ValueAnimator.ofFloat(1.0f, 0.15f, 0.26f);
 			animator2.setDuration(200);
 			animator2.addUpdateListener(new AnimatorUpdateListener() {
 
@@ -292,7 +298,6 @@ public class HamburgerButton extends View {
 					progressEnd = frameValue;
 					invalidate();
 				}
-
 			});
 
 			ValueAnimator animator3 = ValueAnimator.ofFloat(SIZE / 4 * 3,
@@ -308,12 +313,10 @@ public class HamburgerButton extends View {
 					topY = (int) frameValue;
 					invalidate();
 				}
-
 			});
-			animator3.start();
 
 			ValueAnimator animator4 = ValueAnimator.ofFloat(SIZE / 4,
-					SIZE / 4 * 3 + 10, SIZE / 4 * 3);
+					SIZE / 4 * 3 - 10, SIZE / 4 * 3);
 			animator4.setDuration(200);
 			animator4.addUpdateListener(new AnimatorUpdateListener() {
 
@@ -324,11 +327,13 @@ public class HamburgerButton extends View {
 					bottomY = (int) frameValue;
 					invalidate();
 				}
-
 			});
-			animator4.start();
+			
+			
+			animator1.start();
 			animator2.start();
+			animator3.start();
+			animator4.start();
 		}
-
 	}
 }
