@@ -66,7 +66,7 @@ public class HamburgerButton extends View {
 			mPathFactory.addPoint(MARGIN + (SIZE - MARGIN * 2) * p, SIZE / 2);
 		}
 
-		for (float i = 0.5f; i > -0.12; i -= 0.04) {
+		for (float i = 0.5f; i > 0.0; i -= 0.04) {
 
 			float a1 = (float) (Math.cos(Math.PI * 0.2) * SIZE / 2 + SIZE / 2);
 			float b1 = (float) (SIZE / 2 - Math.sin(Math.PI * 0.2) * SIZE / 2);
@@ -74,7 +74,7 @@ public class HamburgerButton extends View {
 			float a2 = SIZE - MARGIN;
 			float b2 = SIZE / 2;
 			float radius = (float) (Math.sqrt(Math.abs((a1 - a2) * (a1 - a2)
-					+ (b1 - b2) * (b1 - b2))) / 2);
+					+ (b1 - b2) * (b1 - b2))) / 2)+STORKE_WIDTH/2;
 
 			float offsetX = (a1 + a2) / 2 - 5;
 
@@ -287,7 +287,7 @@ public class HamburgerButton extends View {
 			});
 
 			ValueAnimator animator2 = ValueAnimator.ofFloat(1.0f, 0.15f, 0.26f);
-			animator2.setDuration(200);
+			animator2.setDuration(300);
 			animator2.addUpdateListener(new AnimatorUpdateListener() {
 
 				@Override
