@@ -21,7 +21,11 @@ public class MainActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				button.toggle();
+				if(button.isToogleOn()){
+					button.toogleOff();
+				}else{
+					button.toogleOn();
+				}
 			}
 			
 		});
